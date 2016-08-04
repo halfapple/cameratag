@@ -1,0 +1,46 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+
+
+    <SurfaceView
+        android:id="@+id/surfaceView"
+        android:layout_marginBottom="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/panel_take_photo"
+            android:layout_width="fill_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:background="@mipmap/camera_blackbg"
+            android:gravity="center_vertical"
+            android:padding="2dp">
+            <Button
+                android:id="@+id/takepicture"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/btn_take_photo" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_above="@id/panel_take_photo"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include layout="@layout/camera_marker"/>
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

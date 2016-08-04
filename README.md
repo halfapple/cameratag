@@ -6,4 +6,5 @@ camera save tag in photo
 其中，相机本身参考了 StickerCamera 开源程序。
 重在演示一个简单的合成过程。
 
-![image](https://github.com/halfapple/cameratag/app/screenshots/demo1.png)
+
+![image](https://github.com/halfapple/cameratag/tree/master/app/screenshots/demo1.png)

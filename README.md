@@ -1,5 +1,5 @@
 # cameratag
-camera save tag in photo
+camera tag save
 
 
 程序功能：将自定义画面（通过xml布局）覆盖（overlay）到一张相机图片上，并保存到一张图片中。
@@ -7,4 +7,4 @@ camera save tag in photo
 重在演示一个简单的合成过程。
 
 
-![image](https://github.com/halfapple/cameratag/tree/master/app/screenshots/demo1.png)
+![image](app/screenshots/demo1.png)

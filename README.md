@@ -1,5 +1,5 @@
 # cameratag
-camera tag save
+android camera tag save
 
 
 程序功能：将自定义画面（通过xml布局）覆盖（overlay）到一张相机图片上，并保存到一张图片中。

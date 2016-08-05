@@ -7,4 +7,5 @@ camera tag save
 重在演示一个简单的合成过程。
 
 
+![image](app/screenshots/demo0.png)
 ![image](app/screenshots/demo1.png)

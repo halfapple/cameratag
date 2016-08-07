@@ -39,8 +39,8 @@
             android:id="@+id/bottom_icon"
             android:layout_gravity="right|bottom"
             android:background="@mipmap/ic_launcher"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
     </LinearLayout>
 
 </RelativeLayout>

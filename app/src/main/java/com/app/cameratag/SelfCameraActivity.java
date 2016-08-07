@@ -51,27 +51,26 @@ public class SelfCameraActivity extends AppCompatActivity {
     public static final int request_code = 100;
     public static final int result_code_ok = 101;
 
+    // camera param
     private Camera.Parameters parameters = null;
     private Camera cameraInst = null;
     private Bundle bundle = null;
-
-    private Handler handler = new Handler();
+    private Camera.Size adapterSize = null;
+    private Camera.Size previewSize = null;
 
     private Bitmap mTempBitmap;
     private int PHOTO_HEIGHT = 0;
     private int PHOTO_WIDTH = 0;
-    private int targetWidthPix = 0;
-    private int targetHeightPix = 0;
+    private int target_width = 0;
+    private int target_height = 0;
     private float scaleWidth;
     private float scaleHeight;
 
-    private Camera.Size adapterSize = null;
-    private Camera.Size previewSize = null;
-
-    private final Handler mHandlerTimer = new Handler();
+    private Handler handler = new Handler();
+    private final Handler mTimerHandler = new Handler();
     private boolean updateTimeFlag = true;
 
-    //widgets
+    //ui widgets
     private TextView mTimeTv;
     private Button mTakePhotoBtn;
     private SurfaceView mSurfaceView;
@@ -88,7 +87,6 @@ public class SelfCameraActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
         mTimeTv = (TextView)findViewById(R.id.time_tv);
         mTakePhotoBtn = (Button)findViewById(R.id.takepicture);
         mSurfaceView = (SurfaceView)findViewById(R.id.surfaceView);
@@ -121,13 +119,6 @@ public class SelfCameraActivity extends AppCompatActivity {
         });
     }
 
-    private Runnable mUpdateTime = new Runnable() {
-        @Override
-        public void run() {
-            updateTimeTv();
-        }
-    };
-
     private void updateTimeTv() {
         if (!updateTimeFlag) {
             return;
@@ -136,8 +127,15 @@ public class SelfCameraActivity extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         mTimeTv.setText(df.format(new Date()));
 
-        mHandlerTimer.postDelayed(mUpdateTime, 1000);
+        mTimerHandler.postDelayed(mUpdateTime, 1000);
     }
+
+    private Runnable mUpdateTime = new Runnable() {
+        @Override
+        public void run() {
+            updateTimeTv();
+        }
+    };
 
     private final class MyPictureCallback implements Camera.PictureCallback {
 
@@ -146,7 +144,40 @@ public class SelfCameraActivity extends AppCompatActivity {
             bundle = new Bundle();
             bundle.putByteArray("bytes", data);
             new SavePicTask(data).execute();
-            //camera.startPreview();
+        }
+    }
+
+    private final class MySurfaceCallback implements SurfaceHolder.Callback {
+
+        public void surfaceDestroyed(SurfaceHolder holder) {
+            try {
+                if (cameraInst != null) {
+                    cameraInst.stopPreview();
+                    cameraInst.release();
+                    cameraInst = null;
+                }
+            } catch (Exception e) {
+
+            }
+        }
+
+        @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+            if (null == cameraInst) {
+                try {
+                    cameraInst = Camera.open();
+                    cameraInst.setPreviewDisplay(holder);
+                    initCamera();
+                    cameraInst.startPreview();
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+            autoFocus();
         }
     }
 
@@ -176,9 +207,6 @@ public class SelfCameraActivity extends AppCompatActivity {
             }
         }
 
-        /*
-         * result = /storage/sdcard0/DCIM/Camera/xxx.jpg
-         */
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
@@ -195,42 +223,6 @@ public class SelfCameraActivity extends AppCompatActivity {
         }
     }
 
-    private final class MySurfaceCallback implements SurfaceHolder.Callback {
-
-        public void surfaceDestroyed(SurfaceHolder holder) {
-            try {
-                if (cameraInst != null) {
-                    cameraInst.stopPreview();
-                    cameraInst.release();
-                    cameraInst = null;
-                }
-            } catch (Exception e) {
-
-            }
-
-        }
-
-        @Override
-        public void surfaceCreated(SurfaceHolder holder) {
-            if (null == cameraInst) {
-                try {
-                    cameraInst = Camera.open();
-                    cameraInst.setPreviewDisplay(holder);
-                    initCamera();
-                    cameraInst.startPreview();
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            autoFocus();
-        }
-    }
-
-    //实现自动对焦
     private void autoFocus() {
         new Thread() {
             @Override
@@ -261,14 +253,14 @@ public class SelfCameraActivity extends AppCompatActivity {
 
         setUpPicSize(parameters);
         setUpPreviewSize(parameters);
-        //}
+
         if (adapterSize != null) {
             parameters.setPictureSize(adapterSize.width, adapterSize.height);
         }
+
         if (previewSize != null) {
             parameters.setPreviewSize(previewSize.width, previewSize.height);
         }
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);//1连续对焦
@@ -282,42 +274,25 @@ public class SelfCameraActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         cameraInst.startPreview();
-        cameraInst.cancelAutoFocus();// 2如果要实现连续的自动对焦，这一句必须加上
+        cameraInst.cancelAutoFocus();
     }
 
     private void setUpPicSize(Camera.Parameters parameters) {
-
-        if (adapterSize != null) {
-            return;
-        } else {
+        if (adapterSize == null) {
             adapterSize = findBestPictureResolution();
-            return;
         }
     }
 
     private void setUpPreviewSize(Camera.Parameters parameters) {
-
-        if (previewSize != null) {
-            return;
-        } else {
+        if (previewSize == null) {
             previewSize = findBestPreviewResolution();
         }
     }
 
-    /**
-     * 最小预览界面的分辨率
-     */
     private static final int MIN_PREVIEW_PIXELS = 480 * 320;
-
-    /**
-     * 最大宽高比差
-     */
     private static final double MAX_ASPECT_DISTORTION = 0.15;
     private static final String TAG = "Camera";
 
-    /**
-     * 找出最适合的预览界面分辨率
-     */
     private Camera.Size findBestPreviewResolution() {
         Camera.Parameters cameraParameters = cameraInst.getParameters();
         Camera.Size defaultPreviewResolution = cameraParameters.getPreviewSize();
@@ -327,7 +302,6 @@ public class SelfCameraActivity extends AppCompatActivity {
             return defaultPreviewResolution;
         }
 
-        // 按照分辨率从大到小排序
         List<Camera.Size> supportedPreviewResolutions = new ArrayList<Camera.Size>(rawSupportedSizes);
         Collections.sort(supportedPreviewResolutions, new Comparator<Camera.Size>() {
             @Override
@@ -521,7 +495,7 @@ public class SelfCameraActivity extends AppCompatActivity {
 
     private synchronized Bitmap get_overlay() {
         if (mTempBitmap == null) {
-            mTempBitmap = Bitmap.createBitmap(targetWidthPix, targetHeightPix, Bitmap.Config.ARGB_8888);
+            mTempBitmap = Bitmap.createBitmap(target_width, target_height, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(mTempBitmap);
 
             LayoutInflater layoutInflater = LayoutInflater.from(getApplicationContext());
@@ -592,10 +566,10 @@ public class SelfCameraActivity extends AppCompatActivity {
         Canvas canvas = new Canvas(icon);
         Rect src = new Rect(0, 0, rotatedImage.getWidth(), rotatedImage.getHeight());
         canvas.drawBitmap(rotatedImage, src, src, photoPaint);
-        if (targetWidthPix == 0 || targetHeightPix == 0) {
+        if (target_width == 0 || target_height == 0) {
             try {
-                targetWidthPix = rotatedImage.getWidth();
-                targetHeightPix = rotatedImage.getHeight();
+                target_width = rotatedImage.getWidth();
+                target_height = rotatedImage.getHeight();
                 scaleWidth = ((float) rotatedImage.getWidth()) / DensityUtil.getScreenWidth(getApplicationContext());
                 scaleHeight = ((float)rotatedImage.getHeight()) / DensityUtil.getScreenHeight(getApplicationContext());
                 handler.postDelayed(rr, 200);
@@ -631,15 +605,17 @@ public class SelfCameraActivity extends AppCompatActivity {
         previewSize = null;
     }
 
-    public static boolean mkdir(File file) {
+    private static boolean mkdir(File file) {
         while (!file.getParentFile().exists()) {
             mkdir(file.getParentFile());
         }
         return file.mkdir();
     }
 
-    //保存图片文件
-    public static String saveToFile(String fileFolderStr, Bitmap croppedImage) throws FileNotFoundException, IOException {
+    /*
+     * save the photo
+     */
+    private static String saveToFile(String fileFolderStr, Bitmap croppedImage) throws FileNotFoundException, IOException {
         File jpgFile;
 
         File fileFolder = new File(fileFolderStr);

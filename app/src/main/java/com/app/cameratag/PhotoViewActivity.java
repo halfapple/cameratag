@@ -20,7 +20,7 @@ public class PhotoViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        setContentView(R.layout.act_photo_view);
+        setContentView(R.layout.activity_photo_view);
         PhotoView iv = (PhotoView)findViewById(R.id.iv_photo);
 
         String picUrl = getIntent().getStringExtra(URL_KEY);

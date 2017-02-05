@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.app.cameratag.mergeCamera.MergeCameraActivity;
+import com.app.cameratag.deprecatedCamera.DeprecatedCameraActivity;
+import com.app.cameratag.util.CrashLogHandler;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -29,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CrashLogHandler crashLogHandler = CrashLogHandler.getInstance();
+        crashLogHandler.init(getApplicationContext());
+
         setContentView(R.layout.activity_main);
 
         initImageLoader(getApplicationContext());
@@ -37,8 +44,16 @@ public class MainActivity extends AppCompatActivity {
         mButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, SelfCameraActivity.class);
-                startActivityForResult(i, SelfCameraActivity.request_code);
+                Intent i = new Intent(MainActivity.this, MergeCameraActivity.class);
+                startActivityForResult(i, MergeCameraActivity.request_code);
+            }
+        });
+
+        findViewById(R.id.btn2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, DeprecatedCameraActivity.class);
+                startActivity(i);
             }
         });
 
@@ -56,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == SelfCameraActivity.request_code &&
-                resultCode == SelfCameraActivity.result_code_ok) {
+        if (requestCode == MergeCameraActivity.request_code &&
+                resultCode == MergeCameraActivity.result_code_ok) {
 
             mAbsPath = data.getStringExtra("absPath");
             mFileUrl = "file://" + mAbsPath;

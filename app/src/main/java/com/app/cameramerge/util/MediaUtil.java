@@ -1,4 +1,4 @@
-package com.app.cameratag.util;
+package com.app.cameramerge.util;
 
 
 import android.net.Uri;
@@ -25,14 +25,14 @@ public class MediaUtil {
         // using Environment.getExternalStorageState() before doing this.
 
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "TagCameraApp");
+                Environment.DIRECTORY_PICTURES), "CameraMergeApp");
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 
         // Create the storage directory if it does not exist
         if (! mediaStorageDir.exists()) {
             if (! mediaStorageDir.mkdirs()){
-                Log.d("TagCameraApp", "failed to create directory");
+                Log.d("CameraMergeApp", "failed to create directory");
                 return null;
             }
         }

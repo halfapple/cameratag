@@ -1,8 +1,10 @@
-package com.app.cameratag.deprecatedCamera;
+package com.app.cameramerge.deprecatedCamera;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,7 +13,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.app.cameratag.R;
+import com.app.cameramerge.R;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
-import static com.app.cameratag.util.MediaUtil.getOutputMediaFile;
+import static com.app.cameramerge.util.MediaUtil.getOutputMediaFile;
 
 /**
  *
@@ -27,6 +29,9 @@ import static com.app.cameratag.util.MediaUtil.getOutputMediaFile;
  *
  */
 public class DeprecatedCameraActivity extends AppCompatActivity {
+
+    public static final int request_code = 104;
+    public static final int result_code_ok = 105;
 
     public static final String TAG = DeprecatedCameraActivity.class.getName();
 
@@ -83,6 +88,11 @@ public class DeprecatedCameraActivity extends AppCompatActivity {
                 fos.close();
 
                 Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+
+                Intent i = new Intent();
+                i.putExtra("absPath", Uri.parse(pictureFile.getPath()).toString());
+                setResult(result_code_ok, i);
+                finish();
 
             } catch (FileNotFoundException e) {
                 Log.d(TAG, "File not found: " + e.getMessage());

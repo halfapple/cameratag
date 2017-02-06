@@ -1,4 +1,4 @@
-package com.app.cameratag;
+package com.app.cameramerge;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,10 +8,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import uk.co.senab.photoview.PhotoView;
 
-/**
- *
- *
- */
+
 public class PhotoViewActivity extends AppCompatActivity {
 
     public final static String TAG = PhotoViewActivity.class.getSimpleName();

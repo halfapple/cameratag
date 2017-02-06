@@ -1,4 +1,4 @@
-package com.app.cameratag.deprecatedCamera;
+package com.app.cameramerge.deprecatedCamera;
 
 
 import android.content.Context;

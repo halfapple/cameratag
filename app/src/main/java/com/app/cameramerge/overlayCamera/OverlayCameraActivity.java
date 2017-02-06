@@ -1,4 +1,4 @@
-package com.app.cameratag.mergeCamera;
+package com.app.cameramerge.overlayCamera;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -31,8 +31,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.app.cameratag.R;
-import com.app.cameratag.util.DensityUtil;
+import com.app.cameramerge.R;
+import com.app.cameramerge.util.DensityUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,7 +46,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class MergeCameraActivity extends AppCompatActivity {
+public class OverlayCameraActivity extends AppCompatActivity {
 
     public static final int request_code = 100;
     public static final int result_code_ok = 101;
@@ -309,7 +309,7 @@ public class MergeCameraActivity extends AppCompatActivity {
 
     private static final int MIN_PREVIEW_PIXELS = 480 * 320;
     private static final double MAX_ASPECT_DISTORTION = 0.15;
-    private static final String TAG = MergeCameraActivity.class.getName();
+    private static final String TAG = OverlayCameraActivity.class.getName();
 
     private Camera.Size findBestPreviewResolution() {
         Camera.Parameters cameraParameters = cameraInst.getParameters();
@@ -448,11 +448,9 @@ public class MergeCameraActivity extends AppCompatActivity {
             return sortedSupportedPicResolutions.get(0);
         }
 
-        // 没有找到合适的，就返回默认的
         return defaultPictureResolution;
     }
 
-    //控制图像的正确显示方向
     private void setDispaly(Camera.Parameters parameters, Camera camera) {
         if (Build.VERSION.SDK_INT >= 8) {
             camera.setDisplayOrientation(90);
@@ -556,9 +554,7 @@ public class MergeCameraActivity extends AppCompatActivity {
         }
 
         Matrix m = new Matrix();
-
         m.setRotate(90, PHOTO_WIDTH / 2, PHOTO_HEIGHT / 2);
-
         Bitmap rotatedImage = Bitmap.createBitmap(croppedImage, 0, 0,
                 croppedImage.getWidth(), croppedImage.getHeight(), m, true);
 
@@ -631,7 +627,7 @@ public class MergeCameraActivity extends AppCompatActivity {
         jpgFile = new File(fileFolder, filename);
 
         FileOutputStream outputStream = new FileOutputStream(jpgFile);
-        croppedImage.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
+        croppedImage.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
 
         try {
             outputStream.close();

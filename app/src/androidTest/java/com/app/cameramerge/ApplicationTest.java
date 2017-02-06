@@ -1,4 +1,4 @@
-package com.app.cameratag;
+package com.app.cameramerge;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

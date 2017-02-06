@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="com.app.cameratag.MainActivity">
+    tools:context="com.app.cameramerge.MainActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -19,34 +19,63 @@
                       android:orientation="vertical"
                       android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/btn2"
-                android:layout_margin="20dp"
-                android:padding="20dp"
-                android:text="启动相机"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <RelativeLayout android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/camera_api_btn"
+                    android:layout_margin="20dp"
+                    android:padding="20dp"
+                    android:text="api "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <ImageView
+                    android:id="@+id/photo_api"
+                    android:src="@mipmap/ic_launcher"
+                    android:scaleType="centerInside"
+                    android:layout_toRightOf="@+id/camera_api_btn"
+                    android:layout_centerVertical="true"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"/>
+            </RelativeLayout>
 
-            <LinearLayout
-                android:orientation="horizontal"
+            <RelativeLayout android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/screenshot_btn"
+                    android:layout_margin="20dp"
+                    android:padding="20dp"
+                    android:text="screenshot 相机"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <ImageView
+                    android:id="@+id/photo_iv0"
+                    android:src="@mipmap/ic_launcher"
+                    android:scaleType="centerInside"
+                    android:layout_toRightOf="@+id/screenshot_btn"
+                    android:layout_centerVertical="true"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <Button
-                    android:id="@+id/btn1"
+                    android:id="@+id/overlay_btn"
                     android:layout_margin="20dp"
                     android:padding="20dp"
-                    android:text="启动自定义相机"
+                    android:text="overlay 相机"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-
                 <ImageView
                     android:id="@+id/photo_iv"
+                    android:layout_toRightOf="@+id/overlay_btn"
                     android:src="@mipmap/ic_launcher"
                     android:scaleType="centerInside"
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"/>
+            </RelativeLayout>
 
         </LinearLayout>
     </ScrollView>

@@ -1,4 +1,4 @@
-package com.app.cameratag.util;
+package com.app.cameramerge.util;
 
 import android.content.Context;
 import android.util.DisplayMetrics;

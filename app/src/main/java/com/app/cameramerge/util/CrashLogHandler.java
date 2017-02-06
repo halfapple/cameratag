@@ -1,4 +1,4 @@
-package com.app.cameratag.util;
+package com.app.cameramerge.util;
 
 import android.content.Context;
 import android.os.Process;
@@ -58,7 +58,6 @@ public class CrashLogHandler extends BaseLog implements
         }
 
         try {
-            // 保存日志文件
             saveCrashInfo2File(ex);
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -68,12 +67,10 @@ public class CrashLogHandler extends BaseLog implements
     }
 
     private void saveCrashInfo2File(Throwable ex) {
-        // 保存系统信息
         StringBuilder sb = new StringBuilder();
         sb.append(getDeviceInfo(ctx, TAG));
         sb.append("\n");
 
-        // 保存异常堆栈
         String excpetionMsg = getExceptionCauseMsg(ex);
         String formatterMsg = getFormatterMsg(TAG, "", excpetionMsg);
         sb.append(formatterMsg);

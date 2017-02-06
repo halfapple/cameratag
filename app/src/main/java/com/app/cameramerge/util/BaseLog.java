@@ -1,4 +1,4 @@
-package com.app.cameratag.util;
+package com.app.cameramerge.util;
 
 import android.content.Context;
 import android.os.Build;
@@ -15,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class BaseLog {
-    // 用于格式化日期,作为日志文件名的一部分
     protected static final SimpleDateFormat TIME_FORMATTER = new SimpleDateFormat(
             "yyyy-MM-dd-HH-mm-ss");
 

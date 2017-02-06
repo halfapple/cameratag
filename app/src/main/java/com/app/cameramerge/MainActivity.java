@@ -1,4 +1,4 @@
-package com.app.cameratag;
+package com.app.cameramerge;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
-import com.app.cameratag.mergeCamera.MergeCameraActivity;
-import com.app.cameratag.deprecatedCamera.DeprecatedCameraActivity;
-import com.app.cameratag.util.CrashLogHandler;
+import com.app.cameramerge.deprecatedCamera.DeprecatedCameraActivity;
+import com.app.cameramerge.overlayCamera.OverlayCameraActivity;
+import com.app.cameramerge.screenshotCamera.ScreenShotCameraActivity;
+import com.app.cameramerge.util.CrashLogHandler;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -24,9 +24,13 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageView mImageView;
+    private ImageView mImageApi;
+    private String mFileUrlApi;
 
-    private String mAbsPath;
+    private ImageView mImageView0;
+    private String mFileUrl0;
+
+    private ImageView mImageView;
     private String mFileUrl;
 
     @Override
@@ -40,19 +44,47 @@ public class MainActivity extends AppCompatActivity {
 
         initImageLoader(getApplicationContext());
 
-        Button mButton1 = (Button) findViewById(R.id.btn1);
-        mButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, MergeCameraActivity.class);
-                startActivityForResult(i, MergeCameraActivity.request_code);
-            }
-        });
-
-        findViewById(R.id.btn2).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.camera_api_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, DeprecatedCameraActivity.class);
+                startActivityForResult(i, DeprecatedCameraActivity.request_code);
+
+            }
+        });
+
+        findViewById(R.id.overlay_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, OverlayCameraActivity.class);
+                startActivityForResult(i, OverlayCameraActivity.request_code);
+            }
+        });
+
+        findViewById(R.id.screenshot_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, ScreenShotCameraActivity.class);
+                startActivityForResult(i, ScreenShotCameraActivity.request_code);
+            }
+        });
+
+        mImageApi = (ImageView)findViewById(R.id.photo_api);
+        mImageApi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, PhotoViewActivity.class);
+                i.putExtra(PhotoViewActivity.URL_KEY, mFileUrlApi);
+                startActivity(i);
+            }
+        });
+
+        mImageView0 = (ImageView)findViewById(R.id.photo_iv0);
+        mImageView0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, PhotoViewActivity.class);
+                i.putExtra(PhotoViewActivity.URL_KEY, mFileUrl0);
                 startActivity(i);
             }
         });
@@ -69,15 +101,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == MergeCameraActivity.request_code &&
-                resultCode == MergeCameraActivity.result_code_ok) {
+        if (requestCode == DeprecatedCameraActivity.request_code &&
+                resultCode == DeprecatedCameraActivity.result_code_ok) {
+            mFileUrlApi = "file://" + data.getStringExtra("absPath");
+            ImageLoader.getInstance().displayImage(mFileUrlApi, mImageApi);
 
-            mAbsPath = data.getStringExtra("absPath");
-            mFileUrl = "file://" + mAbsPath;
+        } else if (requestCode == OverlayCameraActivity.request_code &&
+                resultCode == OverlayCameraActivity.result_code_ok) {
+
+            mFileUrl = "file://" + data.getStringExtra("absPath");
             ImageLoader.getInstance().displayImage(mFileUrl, mImageView);
 
+        } else if (requestCode == ScreenShotCameraActivity.request_code &&
+                resultCode == ScreenShotCameraActivity.result_code_ok) {
+
+            mFileUrl0 = "file://" + data.getStringExtra("absPath");
+            ImageLoader.getInstance().displayImage(mFileUrl0, mImageView0);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.app.cameratag;
+package com.app.cameramerge;
 
 import org.junit.Test;
 
